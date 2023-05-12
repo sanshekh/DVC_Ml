@@ -1,0 +1,47 @@
+stages:
+  load_data:
+    cmd: python src/stage_01_load_save.py --config=config/config.yaml
+    deps:
+      - src/stage_01_load_save.py
+      - src/utils/all_utils.py      
+    outs:
+      - artifacts/rawdata_local_dir/data.csv
+
+  split_data:
+    cmd: python src/stage_02_split_data.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_02_split_data.py
+      - src/utils/all_utils.py      
+      - artifacts/rawdata_local_dir/data.csv
+    params:
+      - base_params.random_state
+      - base_params.test_size
+    outs:
+      - artifacts/split_data_dir/train.csv
+      - artifacts/split_data_dir/test.csv
+
+  train:
+    cmd: python src/stage_03_train.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_03_train.py
+      - src/utils/all_utils.py
+      
+      - artifacts/split_data_dir/train.csv
+    params:
+      - base_params.random_state
+      - model_params.ElasticNet.alpha
+      - model_params.ElasticNet.l1_ratio
+    outs:
+      - artifacts/model_dir/ElasticNet.model
+
+  evaluate:
+    cmd: python src/stage_04_evaluate.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_04_evaluate.py
+      - src/utils/all_utils.py      
+      - artifacts/split_data_dir/test.csv
+      - artifacts/model_dir/ElasticNet.model
+    metrics:
+      - artifacts/reports_dir/scores.json:  
+            cache: false
+

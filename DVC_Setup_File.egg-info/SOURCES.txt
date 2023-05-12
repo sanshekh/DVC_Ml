@@ -1,0 +1,12 @@
+setup.py
+DVC_Setup_File.egg-info/PKG-INFO
+DVC_Setup_File.egg-info/SOURCES.txt
+DVC_Setup_File.egg-info/dependency_links.txt
+DVC_Setup_File.egg-info/top_level.txt
+src/__init__.py
+src/stage_01_load_save.py
+src/stage_02_split_data.py
+src/stage_03_train.py
+src/stage_04_evaluate.py
+src/utils/__init__.py
+src/utils/all_utils.py
